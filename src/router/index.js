@@ -4,6 +4,8 @@ const Product = require("../models/Product")
 const User = require("../models/User")
 const AddToCart = require("../models/AddToCart")
 const AmountModel = require('../models/AmountPay')
+const mongoose = require('mongoose')
+
 
 router.post('/addproducts', async (req, res) => {
     try {
@@ -19,7 +21,7 @@ router.post('/addproducts', async (req, res) => {
 
 router.get('/products', async (req, res) => {
     try {
-        const result = await Product.find({})
+        const result = await Product.find()
         res.send(result)
     }
     catch (err) {
@@ -73,14 +75,14 @@ router.post('/addtocart', async (req, res) => {
             await AmountModel.updateOne({ email: req.body.email }, {
                 $set: {
                     amount: (req.body.amount + product.price),
-                    cart: (req.body.cart + 1 )
+                    cart: (req.body.cart + 1)
                 }
             })
-            
-            res.send({ isExist: false , ...result })
+
+            res.send({ isExist: false, ...result })
         }
         else {
-            res.send({isExist:true})
+            res.send({ isExist: true })
         }
     } catch (err) {
         res.status(400).send(err)
